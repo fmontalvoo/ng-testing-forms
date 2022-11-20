@@ -6,6 +6,8 @@ import { Person } from 'src/app/models/person.model';
 
 import { PersonComponent } from './person.component';
 
+import { clickEvent } from 'src/testing';
+
 describe('PersonComponent', () => {
   let component: PersonComponent;
   let fixture: ComponentFixture<PersonComponent>;
@@ -131,10 +133,11 @@ describe('PersonComponent from HostComponent', () => {
   });
 
   it('should emit the person when the button is clicked', () => {
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css('app-person .btn-slt'));
-    const button: HTMLElement = buttonDe.nativeElement;
+    // const buttonDe: DebugElement = fixture.debugElement.query(By.css('app-person .btn-slt'));
+    // const button: HTMLElement = buttonDe.nativeElement;
 
-    buttonDe.triggerEventHandler('click', null);
+    // buttonDe.triggerEventHandler('click', null);
+    clickEvent(fixture, 'app-person .btn-slt');
     fixture.detectChanges();
 
     expect(component.selected).toEqual(component.person);

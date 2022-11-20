@@ -11,6 +11,8 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { generateProducts } from 'src/app/data/product.mock';
 
+import { getText, query, queryById } from 'src/testing';
+
 describe('ProductsComponent', () => {
 
   let component: ProductsComponent;
@@ -129,7 +131,8 @@ describe('ProductsComponent', () => {
       const mockMsg = 'mock message';
       vs.getValueAsPromise.and.returnValue(Promise.resolve(mockMsg));
 
-      const buttonDebug: DebugElement = fixture.debugElement.query(By.css('button.btn-call'));
+      // const buttonDebug: DebugElement = query(fixture, '[data-testid="btn-call"]');
+      const buttonDebug: DebugElement = queryById(fixture, 'btn-call');
       const button = buttonDebug.nativeElement;
       // button.click();
       buttonDebug.triggerEventHandler('click', null);
@@ -144,14 +147,16 @@ describe('ProductsComponent', () => {
       const mockMsg = 'mock message';
       vs.getValueAsPromise.and.returnValue(Promise.resolve(mockMsg));
 
-      const button: HTMLElement = fixture.debugElement.query(By.css('button.btn-call')).nativeElement;
+      // const button: HTMLElement = query(fixture, '[data-testid="btn-call"]').nativeElement;
+      const button: HTMLElement = queryById(fixture, 'btn-call').nativeElement;
       button.click();
       tick();
       fixture.detectChanges();
 
-      const p: HTMLElement = fixture.debugElement.query(By.css('p.msg')).nativeElement;
+      const pText = getText(fixture, 'msg');
+      // const p: HTMLElement = fixture.debugElement.query(By.css('p.msg')).nativeElement;
 
-      expect(p.textContent).toEqual(mockMsg);
+      expect(pText).toEqual(mockMsg);
       expect(vs.getValueAsPromise).toHaveBeenCalled();
     }));
 

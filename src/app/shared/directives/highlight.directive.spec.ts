@@ -4,6 +4,7 @@ import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HighlightDirective } from './highlight.directive';
+import { queryAll, queryAllByDirective } from 'src/testing';
 
 @Component({
   template: `
@@ -44,8 +45,8 @@ describe('HighlightDirective from HostComponent', () => {
 
   it('should have 4 elements with the directive', () => {
     // const elements = fixture.nativeElement.queryAll(By.css('*[highlight]')); // Selecciona cualquier elemento con el atributo 'highlight'.
-    const elementsWithDirective = fixture.debugElement.queryAll(By.directive(HighlightDirective));
-    const elementsWithoutDirective: DebugElement[] = fixture.debugElement.queryAll(By.css('*:not([highlight])'));
+    const elementsWithDirective = queryAllByDirective(fixture, HighlightDirective);
+    const elementsWithoutDirective: DebugElement[] = queryAll(fixture, '*:not([highlight])');
 
     expect(elementsWithDirective.length).toEqual(4);
     expect(elementsWithoutDirective.length).toEqual(2);

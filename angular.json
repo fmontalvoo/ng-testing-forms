@@ -104,5 +104,10 @@
         }
       }
     }
+  },
+  "cli": {
+    "warnings": {
+      "versionMismatch": false
+    }
   }
 }

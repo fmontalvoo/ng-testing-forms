@@ -10,6 +10,6 @@
     <span *ngIf="status === 'error'">Error</span>
   </button>
 
-  <button class="btn-call" (click)="callPromise()">Call</button>
-  <p class="msg">{{response}}</p>
+  <button data-testid="btn-call" (click)="callPromise()">Call</button>
+  <p data-testid="msg">{{response}}</p>
 </section>
