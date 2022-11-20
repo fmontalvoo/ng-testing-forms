@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CreateUserDTO } from 'src/app/models/user.model';
 
-import { UsersService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/services/user.service';
 
 import { MyValidators } from 'src/app/utils/validators';
 
@@ -27,7 +27,7 @@ export class RegisterFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private usersService: UsersService
+    private userService: UserService
   ) { }
 
   ngOnInit(): void { }
@@ -36,7 +36,7 @@ export class RegisterFormComponent implements OnInit {
     event.preventDefault();
     if (this.form.valid) {
       const value = this.form.value;
-      this.usersService.create(value as CreateUserDTO)
+      this.userService.create(value as CreateUserDTO)
         .subscribe((rta) => {
           console.log(rta);
         });
