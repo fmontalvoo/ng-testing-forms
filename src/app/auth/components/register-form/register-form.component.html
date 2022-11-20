@@ -17,15 +17,15 @@
           <input type="email" id="email" name="email" placeholder="Email address" formControlName="email"
             [attr.aria-invalid]="emailField?.touched ? emailField?.invalid : ''" />
           <ng-container *ngIf="emailField?.touched && emailField?.errors">
-            <small *ngIf="emailField?.hasError('required')">*Required</small>
-            <small *ngIf="emailField?.hasError('email')">*It's not a email</small>
+            <small data-testid="email-required" *ngIf="emailField?.hasError('required')">*Required</small>
+            <small data-testid="email-invalid" *ngIf="emailField?.hasError('email')">*It's not a email</small>
           </ng-container>
         </label>
       </div>
 
       <label for="password">
         Password
-        <input type="password" id="password" name="email" placeholder="Password" formControlName="password"
+        <input type="password" id="password" name="password" placeholder="Password" formControlName="password"
           [attr.aria-invalid]="
             passwordField?.touched ? passwordField?.invalid : ''
           " />
@@ -38,7 +38,7 @@
 
       <label for="confirmPassword">
         Confirm Password
-        <input type="password" id="confirmPassword" name="email" placeholder="Confirm password"
+        <input type="password" id="confirmPassword" name="password" placeholder="Confirm password"
           formControlName="confirmPassword" [attr.aria-invalid]="
             confirmPasswordField?.touched
               ? form.hasError('match_password')

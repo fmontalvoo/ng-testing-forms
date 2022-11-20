@@ -5,6 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { UserService } from 'src/app/services/user.service';
 
 import { RegisterFormComponent } from './register-form.component';
+import { getText, query } from 'src/testing';
 
 fdescribe('RegisterFormComponent', () => {
   let userService: UserService;
@@ -48,6 +49,23 @@ fdescribe('RegisterFormComponent', () => {
     emailField?.setValue('');
     expect(emailField?.invalid).withContext('Empty email').toBeTruthy();
   });
+
+  it('should email be in a invalid format filled from UI', () => {
+    const emailField = component.emailField;
+    const nativeEmailField: HTMLInputElement = query(fixture, 'input#email').nativeElement;
+
+    nativeEmailField.value = 'Email';
+    nativeEmailField.dispatchEvent(new Event('input')); // Rellena el campo de texto(input).
+    nativeEmailField.dispatchEvent(new Event('blur')); // Desenfoca el campo de texto(input).
+    fixture.detectChanges();
+
+    expect(emailField?.invalid).withContext('Invalid format').toBeTruthy();
+
+    const errorMessage = getText(fixture, 'email-invalid');
+
+    expect(errorMessage).toContain("It's not a email");
+  });
+
 
   it('should password be in a invalid format', () => {
     const passwordField = component.passwordField;
