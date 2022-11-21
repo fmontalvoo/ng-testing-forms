@@ -8,6 +8,7 @@ import { RegisterFormComponent } from './register-form.component';
 
 import { generateUser } from 'src/app/data/user.mock';
 import { asyncReject, asyncResolve, clickElement, getText, setCheckValue, setInputValue } from 'src/testing';
+import { of } from 'rxjs';
 
 describe('RegisterFormComponent', () => {
   let userService: UserService;
@@ -78,6 +79,8 @@ describe('RegisterFormComponent', () => {
   });
 
   it('should send the form successfully', fakeAsync(() => {
+    spyOn(userService, 'isAvailableByEmail').and.returnValue(of({ isAvailable: true }));
+
     component.form.patchValue({
       name: 'Fulano',
       email: 'fulano@email.com',
@@ -89,6 +92,7 @@ describe('RegisterFormComponent', () => {
     const mockUser = generateUser();
     spyOn(userService, 'create').and.returnValue(asyncResolve(mockUser));
     component.register(new Event('submit'));
+
     expect(component.form.valid).withContext('Form should be valid').toBeTruthy();
     expect(component.status).withContext('Status should be "loading"').toEqual('loading');
 
@@ -100,6 +104,8 @@ describe('RegisterFormComponent', () => {
   }));
 
   it('should send the form successfully from UI', fakeAsync(() => {
+    spyOn(userService, 'isAvailableByEmail').and.returnValue(of({ isAvailable: true }));
+
     setInputValue(fixture, 'Fulano', 'input#name');
     setInputValue(fixture, 'fulano@email.com', 'input#email');
     setInputValue(fixture, 'Abc.1234', 'input#password');
@@ -124,6 +130,8 @@ describe('RegisterFormComponent', () => {
   }));
 
   it('should send the form unsuccessfully from UI', fakeAsync(() => {
+    spyOn(userService, 'isAvailableByEmail').and.returnValue(of({ isAvailable: true }));
+
     setInputValue(fixture, 'Fulano', 'input#name');
     setInputValue(fixture, 'fulano@email.com', 'input#email');
     setInputValue(fixture, 'Abc.1234', 'input#password');
@@ -167,5 +175,20 @@ describe('RegisterFormComponent', () => {
     expect(passwordError).toContain('Should be greater 6');
     expect(passwordError1).toContain('Should contain numbers');
     expect(confirmPasswordError).toContain('Not matching');
+  });
+
+  it('should email be not available filled from UI', () => {
+    const emailField = component.emailField;
+    spyOn(userService, 'isAvailableByEmail').and.returnValue(of({ isAvailable: false }));
+
+    setInputValue(fixture, 'admin@mail.com', 'input#email');
+    fixture.detectChanges();
+
+    expect(emailField?.invalid).withContext('Unavailable email').toBeTruthy();
+
+    const errorMessage = getText(fixture, 'email-not_available', true);
+
+    expect(errorMessage).withContext('Email unavailable').toContain('This email address is not available');
+    expect(userService.isAvailableByEmail).withContext('Have been calle with email').toHaveBeenCalledWith('admin@mail.com');
   });
 });

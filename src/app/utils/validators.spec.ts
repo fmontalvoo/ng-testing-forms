@@ -6,7 +6,7 @@ import { UserService } from '../services/user.service';
 
 import { MyValidators } from './validators';
 
-fdescribe('Test MyValidators', () => {
+describe('Test MyValidators', () => {
   describe('Test validPassword', () => {
     it('should return null when the password is correct', () => {
       const control = new FormControl('Abc.123');
