@@ -33,7 +33,7 @@ export function clickEvent<T>(
  * @param selector
  * @param withTestId
  */
-export function clickNativeEvent<T>(
+export function clickElement<T>(
   fixture: ComponentFixture<T>,
   selector: string,
   withTestId: boolean = false

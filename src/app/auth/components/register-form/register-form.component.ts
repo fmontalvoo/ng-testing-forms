@@ -40,9 +40,15 @@ export class RegisterFormComponent implements OnInit {
       this.status = 'loading';
       const value = this.form.value;
       this.userService.create(value as CreateUserDTO)
-        .subscribe((rta) => {
-          console.log(rta);
-          this.status = 'success';
+        .subscribe({
+          next: res => {
+            console.info(res);
+            this.status = 'success';
+          },
+          error: err => {
+            console.error(err);
+            this.status = 'error';
+          }
         });
     } else {
       this.form.markAllAsTouched();

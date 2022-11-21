@@ -5,7 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { UserService } from 'src/app/services/user.service';
 
 import { RegisterFormComponent } from './register-form.component';
-import { asyncResolve, getText, setInputValue } from 'src/testing';
+import { asyncResolve, clickElement, getText, query, setCheckValue, setInputValue } from 'src/testing';
 
 import { generateUser } from 'src/app/data/user.mock';
 
@@ -79,7 +79,7 @@ fdescribe('RegisterFormComponent', () => {
 
   it('should send the form successfully', fakeAsync(() => {
     component.form.patchValue({
-      name: 'fulano',
+      name: 'Fulano',
       email: 'fulano@email.com',
       password: 'Abc.1234',
       confirmPassword: 'Abc.1234',
@@ -89,6 +89,31 @@ fdescribe('RegisterFormComponent', () => {
     const mockUser = generateUser();
     spyOn(userService, 'create').and.returnValue(asyncResolve(mockUser));
     component.register(new Event('submit'));
+    expect(component.form.valid).withContext('Form should be valid').toBeTruthy();
+    expect(component.status).withContext('Status should be "loading"').toEqual('loading');
+
+    tick();
+    fixture.detectChanges();
+
+    expect(component.status).withContext('Status should be "success"').toEqual('success');
+    expect(userService.create).withContext('Create should have been called').toHaveBeenCalled();
+  }));
+
+  it('should send the form successfully from UI', fakeAsync(() => {
+
+    setInputValue(fixture, 'Fulano', 'input#name');
+    setInputValue(fixture, 'fulano@email.com', 'input#email');
+    setInputValue(fixture, 'Abc.1234', 'input#password');
+    setInputValue(fixture, 'Abc.1234', 'input#confirmPassword');
+    setCheckValue(fixture, true, 'input#terms');
+
+    const mockUser = generateUser();
+    spyOn(userService, 'create').and.returnValue(asyncResolve(mockUser));
+
+    clickElement(fixture, 'btn-submit', true);
+    // query(fixture, 'form').triggerEventHandler('ngSubmit', new Event('submit')); // Lanza el evento "(ngSubmit)" del formulario.
+    fixture.detectChanges();
+
     expect(component.form.valid).withContext('Form should be valid').toBeTruthy();
     expect(component.status).withContext('Status should be "loading"').toEqual('loading');
 
