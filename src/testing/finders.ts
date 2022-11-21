@@ -24,8 +24,18 @@ export function queryAllByDirective<T, D>(fixture: ComponentFixture<T>, directiv
   return debugElements;
 }
 
-export function getText<T>(fixture: ComponentFixture<T>, testId: string) {
-  const debugElement: DebugElement = queryById(fixture, testId);
+export function getText<T>(
+  fixture: ComponentFixture<T>,
+  selector: string,
+  withTestId: boolean = false
+) {
+  let debugElement: DebugElement;
+
+  if (withTestId)
+    debugElement = queryById(fixture, selector);
+  else
+    debugElement = query(fixture, selector);
+
   const nativeElement: HTMLElement = debugElement.nativeElement;
   return nativeElement.textContent;
 }

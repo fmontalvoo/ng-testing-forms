@@ -58,7 +58,7 @@ fdescribe('RegisterFormComponent', () => {
 
     expect(emailField?.invalid).withContext('Invalid format').toBeTruthy();
 
-    const errorMessage = getText(fixture, 'email-invalid');
+    const errorMessage = getText(fixture, 'email-invalid', true);
 
     expect(errorMessage).toContain("It's not a email");
   });
