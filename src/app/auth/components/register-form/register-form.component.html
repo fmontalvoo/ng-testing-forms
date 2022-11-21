@@ -19,6 +19,8 @@
           <ng-container *ngIf="emailField?.touched && emailField?.errors">
             <small data-testid="email-required" *ngIf="emailField?.hasError('required')">*Required</small>
             <small data-testid="email-invalid" *ngIf="emailField?.hasError('email')">*It's not a email</small>
+            <small data-testid="email-not_available" *ngIf="emailField?.hasError('not_available')">*This email address
+              is not available</small>
           </ng-container>
         </label>
       </div>
@@ -47,7 +49,8 @@
               : ''
           " />
         <ng-container *ngIf="confirmPasswordField?.touched && form?.errors">
-          <small data-testid="confirmPassword-match_password" *ngIf="form?.hasError('match_password')">*Not matching</small>
+          <small data-testid="confirmPassword-match_password" *ngIf="form?.hasError('match_password')">*Not
+            matching</small>
         </ng-container>
       </label>
 

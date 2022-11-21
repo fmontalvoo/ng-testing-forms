@@ -1,4 +1,9 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+
+import { of } from 'rxjs';
+
+import { UserService } from '../services/user.service';
+
 import { MyValidators } from './validators';
 
 fdescribe('Test MyValidators', () => {
@@ -41,6 +46,36 @@ fdescribe('Test MyValidators', () => {
       const res = MyValidators.matchPasswords(group);
 
       expect(res?.match_password).toBeTrue();
+    });
+  });
+
+  describe('Test checkEmailAvailability', () => {
+    const userService: jasmine.SpyObj<UserService> = jasmine.createSpyObj('UserService', ['isAvailableByEmail']);
+
+    it('should return null when the email is available', (doneFn) => {
+      const control = new FormControl('fgmo@mail.com');
+      const validator = MyValidators.checkEmailAvailability(userService);
+
+      userService.isAvailableByEmail.and.returnValue(of({ isAvailable: true }));
+
+      validator(control)
+        .subscribe(res => {
+          expect(res).toBeNull();
+          doneFn();
+        });
+    });
+
+    it('should return an obj when the email is not available', (doneFn) => {
+      const control = new FormControl('admin@mail.com');
+      const validator = MyValidators.checkEmailAvailability(userService);
+
+      userService.isAvailableByEmail.and.returnValue(of({ isAvailable: false }));
+
+      validator(control)
+        .subscribe(res => {
+          expect(res?.not_available).toBeTrue();
+          doneFn();
+        });
     });
   });
 });

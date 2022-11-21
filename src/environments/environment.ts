@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  api_url: 'https://damp-spire-59848.herokuapp.com/api',
+  api_url: 'https://api.escuelajs.co/api',
 };
 
 /*
