@@ -9,7 +9,7 @@ import { RegisterFormComponent } from './register-form.component';
 import { generateUser } from 'src/app/data/user.mock';
 import { asyncReject, asyncResolve, clickElement, getText, setCheckValue, setInputValue } from 'src/testing';
 
-fdescribe('RegisterFormComponent', () => {
+describe('RegisterFormComponent', () => {
   let userService: UserService;
 
   let component: RegisterFormComponent;

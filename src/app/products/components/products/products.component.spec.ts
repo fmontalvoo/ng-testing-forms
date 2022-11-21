@@ -153,7 +153,7 @@ describe('ProductsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      const pText = getText(fixture, 'msg');
+      const pText = getText(fixture, 'msg', true);
       // const p: HTMLElement = fixture.debugElement.query(By.css('p.msg')).nativeElement;
 
       expect(pText).toEqual(mockMsg);
