@@ -46,7 +46,7 @@ export class RegisterFormComponent implements OnInit {
             this.status = 'success';
           },
           error: err => {
-            console.error(err);
+            // console.error(err);
             this.status = 'error';
           }
         });

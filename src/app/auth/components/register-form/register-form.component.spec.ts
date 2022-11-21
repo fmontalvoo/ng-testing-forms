@@ -1,13 +1,13 @@
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { UserService } from 'src/app/services/user.service';
 
 import { RegisterFormComponent } from './register-form.component';
-import { asyncResolve, clickElement, getText, query, setCheckValue, setInputValue } from 'src/testing';
 
 import { generateUser } from 'src/app/data/user.mock';
+import { asyncReject, asyncResolve, clickElement, getText, setCheckValue, setInputValue } from 'src/testing';
 
 fdescribe('RegisterFormComponent', () => {
   let userService: UserService;
@@ -100,7 +100,6 @@ fdescribe('RegisterFormComponent', () => {
   }));
 
   it('should send the form successfully from UI', fakeAsync(() => {
-
     setInputValue(fixture, 'Fulano', 'input#name');
     setInputValue(fixture, 'fulano@email.com', 'input#email');
     setInputValue(fixture, 'Abc.1234', 'input#password');
@@ -121,6 +120,28 @@ fdescribe('RegisterFormComponent', () => {
     fixture.detectChanges();
 
     expect(component.status).withContext('Status should be "success"').toEqual('success');
+    expect(userService.create).withContext('Create should have been called').toHaveBeenCalled();
+  }));
+
+  it('should send the form unsuccessfully from UI', fakeAsync(() => {
+    setInputValue(fixture, 'Fulano', 'input#name');
+    setInputValue(fixture, 'fulano@email.com', 'input#email');
+    setInputValue(fixture, 'Abc.1234', 'input#password');
+    setInputValue(fixture, 'Abc.1234', 'input#confirmPassword');
+    setCheckValue(fixture, true, 'input#terms');
+
+    spyOn(userService, 'create').and.returnValue(asyncReject('Error creating user'));
+
+    clickElement(fixture, 'btn-submit', true);
+    fixture.detectChanges();
+
+    expect(component.form.valid).withContext('Form should be valid').toBeTruthy();
+    expect(component.status).withContext('Status should be "loading"').toEqual('loading');
+
+    tick();
+    fixture.detectChanges();
+
+    expect(component.status).withContext('Status should be "error"').toEqual('error');
     expect(userService.create).withContext('Create should have been called').toHaveBeenCalled();
   }));
 
