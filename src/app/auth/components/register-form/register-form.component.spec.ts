@@ -1,19 +1,16 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-
-import { of } from 'rxjs';
 
 import { UserService } from 'src/app/services/user.service';
 
 import { RegisterFormComponent } from './register-form.component';
-import { getText, query, setInputValue } from 'src/testing';
+import { asyncResolve, getText, setInputValue } from 'src/testing';
 
 import { generateUser } from 'src/app/data/user.mock';
 
 fdescribe('RegisterFormComponent', () => {
   let userService: UserService;
-  let http: HttpTestingController;
 
   let component: RegisterFormComponent;
   let fixture: ComponentFixture<RegisterFormComponent>;
@@ -32,7 +29,6 @@ fdescribe('RegisterFormComponent', () => {
 
   beforeEach(() => {
     userService = TestBed.inject(UserService);
-    http = TestBed.inject(HttpTestingController);
 
     fixture = TestBed.createComponent(RegisterFormComponent);
     component = fixture.componentInstance;
@@ -91,10 +87,15 @@ fdescribe('RegisterFormComponent', () => {
     });
 
     const mockUser = generateUser();
-    spyOn(userService, 'create').and.returnValue(of(mockUser));
+    spyOn(userService, 'create').and.returnValue(asyncResolve(mockUser));
     component.register(new Event('submit'));
+    expect(component.form.valid).withContext('Form should be valid').toBeTruthy();
+    expect(component.status).withContext('Status should be "loading"').toEqual('loading');
 
-    expect(component.form.valid).toBeTruthy();
-    expect(userService.create).toHaveBeenCalled();
+    tick();
+    fixture.detectChanges();
+
+    expect(component.status).withContext('Status should be "success"').toEqual('success');
+    expect(userService.create).withContext('Create should have been called').toHaveBeenCalled();
   }));
 });
