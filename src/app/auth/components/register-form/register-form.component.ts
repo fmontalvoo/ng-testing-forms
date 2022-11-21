@@ -42,7 +42,7 @@ export class RegisterFormComponent implements OnInit {
       this.userService.create(value as CreateUserDTO)
         .subscribe({
           next: res => {
-            console.info(res);
+            // console.info(res);
             this.status = 'success';
           },
           error: err => {

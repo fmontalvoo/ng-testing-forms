@@ -123,4 +123,28 @@ fdescribe('RegisterFormComponent', () => {
     expect(component.status).withContext('Status should be "success"').toEqual('success');
     expect(userService.create).withContext('Create should have been called').toHaveBeenCalled();
   }));
+
+  it('should show error messages on UI', () => {
+    setInputValue(fixture, '', 'input#name');
+    setInputValue(fixture, 'fulanoemail.com', 'input#email');
+    setInputValue(fixture, 'Abc', 'input#password');
+    setInputValue(fixture, 'Abc.', 'input#confirmPassword');
+    // setCheckValue(fixture, true, 'input#terms');
+
+    fixture.detectChanges();
+
+    expect(component.form.invalid).withContext('Form should be invalid').toBeTruthy();
+
+    const nameError = getText(fixture, 'name-required', true);
+    const emailError = getText(fixture, 'email-invalid', true);
+    const passwordError = getText(fixture, 'password-minlength', true);
+    const passwordError1 = getText(fixture, 'password-invalid_password', true);
+    const confirmPasswordError = getText(fixture, 'confirmPassword-match_password', true);
+
+    expect(nameError).toContain('Required');
+    expect(emailError).toContain("It's not a email");
+    expect(passwordError).toContain('Should be greater 6');
+    expect(passwordError1).toContain('Should contain numbers');
+    expect(confirmPasswordError).toContain('Not matching');
+  });
 });

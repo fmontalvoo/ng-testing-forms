@@ -8,7 +8,7 @@
           <input type="text" id="name" name="name" placeholder="Full Name" formControlName="name"
             [attr.aria-invalid]="nameField?.touched ? nameField?.invalid : ''" />
           <ng-container *ngIf="nameField?.touched && nameField?.errors">
-            <small *ngIf="nameField?.hasError('required')">*Required</small>
+            <small data-testid="name-required" *ngIf="nameField?.hasError('required')">*Required</small>
           </ng-container>
         </label>
 
@@ -30,9 +30,11 @@
             passwordField?.touched ? passwordField?.invalid : ''
           " />
         <ng-container *ngIf="passwordField?.touched && passwordField?.errors">
-          <small *ngIf="passwordField?.hasError('required')">*Required</small>
-          <small *ngIf="passwordField?.hasError('minlength')">*Should be greater 6</small>
-          <small *ngIf="passwordField?.hasError('invalid_password')">*Should contain numbers</small>
+          <small data-testid="password-required" *ngIf="passwordField?.hasError('required')">*Required</small>
+          <small data-testid="password-minlength" *ngIf="passwordField?.hasError('minlength')">*Should be greater
+            6</small>
+          <small data-testid="password-invalid_password" *ngIf="passwordField?.hasError('invalid_password')">*Should
+            contain numbers</small>
         </ng-container>
       </label>
 
@@ -45,7 +47,7 @@
               : ''
           " />
         <ng-container *ngIf="confirmPasswordField?.touched && form?.errors">
-          <small *ngIf="form?.hasError('match_password')">*Not matching</small>
+          <small data-testid="confirmPassword-match_password" *ngIf="form?.hasError('match_password')">*Not matching</small>
         </ng-container>
       </label>
 
