@@ -1,11 +1,15 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+
+import { of } from 'rxjs';
 
 import { UserService } from 'src/app/services/user.service';
 
 import { RegisterFormComponent } from './register-form.component';
 import { getText, query, setInputValue } from 'src/testing';
+
+import { generateUser } from 'src/app/data/user.mock';
 
 fdescribe('RegisterFormComponent', () => {
   let userService: UserService;
@@ -77,15 +81,20 @@ fdescribe('RegisterFormComponent', () => {
     expect(passwordField?.invalid).withContext('Must have at least one number').toBeTruthy();
   });
 
-  it('the form should be invalid', () => {
+  it('should send the form successfully', fakeAsync(() => {
     component.form.patchValue({
       name: 'fulano',
       email: 'fulano@email.com',
       password: 'Abc.1234',
       confirmPassword: 'Abc.1234',
-      checkTerms: false,
+      checkTerms: true,
     });
 
-    expect(component.form.invalid).toBeTruthy();
-  });
+    const mockUser = generateUser();
+    spyOn(userService, 'create').and.returnValue(of(mockUser));
+    component.register(new Event('submit'));
+
+    expect(component.form.valid).toBeTruthy();
+    expect(userService.create).toHaveBeenCalled();
+  }));
 });
